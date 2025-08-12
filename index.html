@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nocturne Gallery</title>
+    
+    <!-- Locomotive Scroll CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+    
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* --- GLOBAL STYLES & FONTS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,700&family=Poppins:wght@300;400&display=swap');
+
+        :root {
+            --font-display: 'Bodoni Moda', serif;
+            --font-body: 'Poppins', sans-serif;
+            --color-background: #0a0a0a;
+            --color-text: #e6e6e6;
+            --color-text-muted: #a1a1a1;
+            --color-accent: #3b82f6;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --glass-background: rgba(23, 23, 23, 0.5);
+            --glass-blur: 10px;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html.has-scroll-smooth {
+            overflow: hidden;
+        }
+
+        html.has-scroll-dragging {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .has-scroll-smooth body {
+            overflow: hidden;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            font-family: var(--font-body);
+        }
+        
+        /* --- PRELOADER STYLES --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-background);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out 0.5s; /* Added delay for fade-out */
+        }
+        #preloader.loaded {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--color-border);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- ANIMATION STYLES --- */
+        @keyframes ken-burns { 0% { transform: scale(1.1) rotate(1deg); } 100% { transform: scale(1) rotate(0deg); } }
+        @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes zoom-in { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        
+        .animate-ken-burns { animation: ken-burns 30s ease-out forwards; }
+        .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
+        .animate-zoom-in { animation: zoom-in 0.3s ease-out forwards; }
+        
+        /* Hero title letter animation */
+        #hero-title span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px) rotate(10deg);
+            animation: reveal-letter 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes reveal-letter {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+        }
+
+        /* Locomotive scroll reveal animations */
+        [data-scroll] {
+            transition: opacity 1s, transform 1s;
+        }
+        [data-scroll].is-inview {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition-property: opacity, transform;
+            transition-duration: 1.2s;
+            transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Ko-fi Button Styling */
+        #kofi-button-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            transition: transform 0.3s ease-in-out;
+        }
+        #kofi-button-container:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Main container for Locomotive Scroll -->
+    <div data-scroll-container>
+
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" data-scroll-section>
+            <div id="header-bg" class="transition-all duration-300 py-5">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+                    <img src="logo.png" alt="Signature Logo" class="h-14 md:h-16" />
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="relative h-screen flex items-center justify-center text-center overflow-hidden" data-scroll-section>
+                <div class="absolute inset-0 bg-cover bg-center animate-ken-burns" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')"></div>
+                <div class="absolute inset-0 bg-black/70"></div>
+                <div class="relative z-10 p-4 text-white">
+                    <h2 id="hero-title" class="font-display text-5xl sm:text-6xl md:text-8xl font-bold"></h2>
+                    <p id="hero-subtitle" class="mt-4 text-lg md:text-xl text-[var(--color-text)] max-w-2xl mx-auto opacity-0" style="animation: fade-in-up 1s ease-out 1s forwards;"></p>
+                </div>
+                <div class="absolute bottom-10 animate-bounce opacity-0" style="animation: fade-in 1s ease 2s forwards;">
+                    <svg class="w-8 h-8 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                </div>
+            </section>
+
+            <!-- Gallery Section -->
+            <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24" data-scroll-section>
+                <div id="filter-buttons" class="flex justify-center flex-wrap gap-3 mb-12">
+                    <!-- Filter buttons will be injected here by JavaScript -->
+                </div>
+                <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6" style="grid-auto-flow: dense;">
+                    <!-- Gallery items will be injected here by JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-8 text-center border-t border-[var(--color-border)]" data-scroll-section>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <p class="text-[var(--color-text-muted)] text-sm">
+                    &copy; 2024 Mészáros Bálint. All moments captured.
+                </p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Lightbox Structure (hidden by default) -->
+    <div id="lightbox" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4 animate-fade-in">
+        <div class="relative w-full max-w-7xl h-full flex items-center justify-center">
+            <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <div class="w-full h-full max-h-[90vh] max-w-[90vw] flex flex-col md:flex-row gap-4">
+                <div class="flex-grow h-2/3 md:h-full flex items-center justify-center bg-black rounded-lg overflow-hidden animate-zoom-in">
+                    <img id="lightbox-img" src="" alt="" class="w-auto h-auto max-w-full max-h-full object-contain"/>
+                </div>
+                <div id="lightbox-info" class="flex-shrink-0 md:w-72 h-1/3 md:h-full p-6 text-white rounded-lg overflow-y-auto opacity-0" style="background: var(--glass-background); backdrop-filter: blur(var(--glass-blur)); animation: fade-in-up 0.5s ease-out 0.4s forwards;">
+                    <h3 id="lightbox-title" class="font-display text-3xl font-bold text-white"></h3>
+                    <p id="lightbox-category" class="text-[var(--color-accent)] font-semibold mt-1 mb-4"></p>
+                    <div class="space-y-2 text-sm text-[var(--color-text-muted)] border-t border-[var(--color-border)] pt-4 mt-4">
+                        <span><strong>Camera:</strong> <span id="lightbox-camera"></span></span><br/>
+                        <span><strong>Lens:</strong> <span id="lightbox-lens"></span></span><br/>
+                        <span><strong>ISO:</strong> <span id="lightbox-iso"></span></span><br/>
+                        <span><strong>Aperture:</strong> f/<span id="lightbox-fstop"></span></span>
+                    </div>
+                </div>
+            </div>
+            <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+            <button id="lightbox-close" class="absolute top-4 right-4 z-20 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Ko-fi Button Container -->
+    <div id="kofi-button-container">
+        <a href='https://ko-fi.com/D1D2182JKJ' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+        </a>
+    </div>
+
+
+    <!-- Locomotive Scroll JS -->
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- GALLERY DATA ---
+            const images = [
+                { id: 1, src: 'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80', title: 'Cosmic River', category: 'Astrophotography', camera: 'Sony A7R IV', lens: '24mm f/1.4', iso: '3200', fstop: '1.8', gridSpanCol: 2, gridSpanRow: 2 },
+                { id: 2, src: 'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1770&q=80', title: 'Dawn Breaker', category: 'Landscape', camera: 'Nikon Z7 II', lens: '70-200mm f/2.8', iso: '100', fstop: '11' },
+                { id: 3, src: 'https://images.unsplash.com/photo-1505144808419-1957a94ca61e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=952&q=80', title: 'Sunset Pier', category: 'Landscape', camera: 'Canon EOS R5', lens: '50mm f/1.2', iso: '200', fstop: '5.6' },
+                { id: 4, src: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1770&q=80', title: 'Urban Flow', category: 'Urban', camera: 'Fujifilm X-T4', lens: '16-55mm f/2.8', iso: '800', fstop: '4.0', gridSpanCol: 2 },
+                { id: 5, src: 'https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1770&q=80', title: 'Lake Serenity', category: 'Nature', camera: 'Leica Q2', lens: '28mm f/1.7', iso: '100', fstop: '8.0' },
+                { id: 6, src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1875&q=80', title: 'Emerald Valley', category: 'Landscape', camera: 'Hasselblad X1D II', lens: '45mm f/4', iso: '100', fstop: '9.0', gridSpanCol: 2 },
+                { id: 7, src: 'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1770&q=80', title: 'Hidden Falls', category: 'Nature', camera: 'Sony A7 III', lens: '24-70mm f/2.8', iso: '400', fstop: '2.8', gridSpanRow: 2 },
+                { id: 8, src: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1776&q=80', title: 'Stardust', category: 'Astrophotography', camera: 'Canon EOS Ra', lens: '15-35mm f/2.8', iso: '6400', fstop: '2.8' },
+            ];
+
+            // --- INITIALIZE LOCOMOTIVE SCROLL ---
+            const scroll = new LocomotiveScroll({
+                el: document.querySelector('[data-scroll-container]'),
+                smooth: true,
+                tablet: { smooth: true },
+                smartphone: { smooth: true }
+            });
+
+            // Update header style on scroll
+            const headerBg = document.getElementById('header-bg');
+            scroll.on('scroll', (args) => {
+                if (args.scroll.y > 20) {
+                    headerBg.style.backgroundColor = 'var(--glass-background)';
+                    headerBg.style.backdropFilter = `blur(var(--glass-blur))`;
+                    headerBg.style.borderBottom = 'var(--glass-border)';
+                    headerBg.classList.remove('py-5');
+                    headerBg.classList.add('py-3');
+                } else {
+                    headerBg.style.backgroundColor = 'transparent';
+                    headerBg.style.backdropFilter = 'none';
+                    headerBg.style.borderBottom = '1px solid transparent';
+                    headerBg.classList.remove('py-3');
+                    headerBg.classList.add('py-5');
+                }
+            });
+
+            // --- GALLERY LOGIC ---
+            const galleryGrid = document.getElementById('gallery-grid');
+            const filterButtonsContainer = document.getElementById('filter-buttons');
+            const lightbox = document.getElementById('lightbox');
+            let currentFilter = 'All';
+            let filteredImages = [];
+            let currentLightboxIndex = 0;
+
+            function renderGallery() {
+                galleryGrid.innerHTML = '';
+                filteredImages = currentFilter === 'All' ? images : images.filter(img => img.category === currentFilter);
+                
+                filteredImages.forEach((image, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'group relative rounded-lg overflow-hidden cursor-pointer fade-in-item';
+                    item.style.gridColumn = `span ${image.gridSpanCol || 1}`;
+                    item.style.gridRow = `span ${image.gridSpanRow || 1}`;
+                    item.style.transitionDelay = `${index * 50}ms`; // Staggered animation delay
+                    item.setAttribute('data-scroll', '');
+                    // Removed the random data-scroll-speed to prevent overlapping
+                    
+                    item.innerHTML = `
+                        <img src="${image.src}" alt="${image.title}" loading="lazy" class="w-full h-full object-cover transform transition-all duration-500 ease-in-out group-hover:scale-105 group-hover:-translate-y-1" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out" style="background: var(--glass-background); backdrop-filter: blur(var(--glass-blur)); border-top: var(--glass-border);">
+                            <h3 class="font-display text-xl font-bold text-white truncate">${image.title}</h3>
+                            <div class="mt-2 text-xs text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
+                                <span>${image.category}</span>
+                            </div>
+                        </div>
+                    `;
+                    item.addEventListener('click', () => openLightbox(index));
+                    galleryGrid.appendChild(item);
+                });
+                // After updating the DOM, we need to tell Locomotive Scroll to update its calculations.
+                scroll.update();
+            }
+
+            function renderFilterButtons() {
+                const categories = ['All', ...new Set(images.map(img => img.category))];
+                filterButtonsContainer.innerHTML = '';
+                categories.forEach(category => {
+                    const button = document.createElement('button');
+                    button.textContent = category;
+                    button.className = `px-5 py-2 text-sm font-semibold rounded-full transition-all duration-300 border ${currentFilter === category ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]' : 'bg-white/5 border-white/10 hover:border-white/30 text-[var(--color-text)]'}`;
+                    button.style.backdropFilter = `blur(var(--glass-blur))`;
+                    button.addEventListener('click', () => {
+                        currentFilter = category;
+                        renderFilterButtons();
+                        renderGallery();
+                    });
+                    filterButtonsContainer.appendChild(button);
+                });
+            }
+
+            // --- LIGHTBOX LOGIC ---
+            function openLightbox(index) {
+                currentLightboxIndex = index;
+                updateLightboxContent();
+                lightbox.style.display = 'flex';
+                scroll.stop();
+            }
+
+            function closeLightbox() {
+                lightbox.style.display = 'none';
+                scroll.start();
+            }
+
+            function updateLightboxContent() {
+                const image = filteredImages[currentLightboxIndex];
+                document.getElementById('lightbox-img').src = image.src;
+                document.getElementById('lightbox-title').textContent = image.title;
+                document.getElementById('lightbox-category').textContent = image.category;
+                document.getElementById('lightbox-camera').textContent = image.camera;
+                document.getElementById('lightbox-lens').textContent = image.lens;
+                document.getElementById('lightbox-iso').textContent = image.iso;
+                document.getElementById('lightbox-fstop').textContent = image.fstop;
+            }
+            
+            function showNextImage() {
+                currentLightboxIndex = (currentLightboxIndex + 1) % filteredImages.length;
+                updateLightboxContent();
+            }
+
+            function showPrevImage() {
+                currentLightboxIndex = (currentLightboxIndex - 1 + filteredImages.length) % filteredImages.length;
+                updateLightboxContent();
+            }
+
+            document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+            document.getElementById('lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); showNextImage(); });
+            document.getElementById('lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); showPrevImage(); });
+            lightbox.addEventListener('click', closeLightbox);
+            lightbox.querySelector('.w-full.h-full').addEventListener('click', (e) => e.stopPropagation());
+
+            document.addEventListener('keydown', (e) => {
+                if (lightbox.style.display === 'flex') {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowRight') showNextImage();
+                    if (e.key === 'ArrowLeft') showPrevImage();
+                }
+            });
+
+            // --- INITIALIZE ---
+            const heroTitle = document.getElementById('hero-title');
+            const heroSubtitle = document.getElementById('hero-subtitle');
+            const titleText = "Moments in Low Light";
+            const subtitleText = "Exploring the world after dusk.";
+
+            heroTitle.innerHTML = titleText.split('').map((letter, i) =>
+                `<span style="animation-delay: ${i * 0.05 + 0.5}s">${letter === ' ' ? '&nbsp;' : letter}</span>`
+            ).join('');
+            heroSubtitle.textContent = subtitleText;
+
+            renderFilterButtons();
+            renderGallery();
+            
+            // This is the fix: Update scroll after all images are loaded
+            window.addEventListener('load', () => {
+                const preloader = document.getElementById('preloader');
+                preloader.classList.add('loaded');
+                scroll.update();
+            });
+        });
+    </script>
+</body>
+</html>
