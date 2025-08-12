@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nocturne Gallery</title>
     
-    <!-- Locomotive Scroll CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
-    
     <!-- Tailwind CSS for utility classes -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -26,21 +23,6 @@
             --glass-background: rgba(23, 23, 23, 0.5);
             --glass-blur: 10px;
             --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        html.has-scroll-smooth {
-            overflow: hidden;
-        }
-
-        html.has-scroll-dragging {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        .has-scroll-smooth body {
-            overflow: hidden;
         }
 
         body {
@@ -62,7 +44,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease-out 0.5s; /* Added delay for fade-out */
+            transition: opacity 0.5s ease-out 0.5s;
         }
         #preloader.loaded {
             opacity: 0;
@@ -104,20 +86,15 @@
             }
         }
 
-        /* Locomotive scroll reveal animations */
-        [data-scroll] {
-            transition: opacity 1s, transform 1s;
-        }
-        [data-scroll].is-inview {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Scroll reveal animations */
         .fade-in-item {
             opacity: 0;
             transform: translateY(50px);
-            transition-property: opacity, transform;
-            transition-duration: 1.2s;
-            transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+            transition: opacity 1.2s cubic-bezier(0.19, 1, 0.22, 1), transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .fade-in-item.is-inview {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Ko-fi Button Styling */
@@ -139,11 +116,11 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Main container for Locomotive Scroll -->
-    <div data-scroll-container>
+    <!-- Main container -->
+    <div>
 
         <!-- Header -->
-        <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" data-scroll-section>
+        <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
             <div id="header-bg" class="transition-all duration-300 py-5">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
                     <img src="logo.png" alt="Signature Logo" class="h-14 md:h-16" />
@@ -153,7 +130,7 @@
 
         <main>
             <!-- Hero Section -->
-            <section class="relative h-screen flex items-center justify-center text-center overflow-hidden" data-scroll-section>
+            <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-cover bg-center animate-ken-burns" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')"></div>
                 <div class="absolute inset-0 bg-black/70"></div>
                 <div class="relative z-10 p-4 text-white">
@@ -168,7 +145,7 @@
             </section>
 
             <!-- Gallery Section -->
-            <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24" data-scroll-section>
+            <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
                 <div id="filter-buttons" class="flex justify-center flex-wrap gap-3 mb-12">
                     <!-- Filter buttons will be injected here by JavaScript -->
                 </div>
@@ -179,7 +156,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="py-8 text-center border-t border-[var(--color-border)]" data-scroll-section>
+        <footer class="py-8 text-center border-t border-[var(--color-border)]">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <p class="text-[var(--color-text-muted)] text-sm">
                     &copy; 2024 Mészáros Bálint. All moments captured.
@@ -226,10 +203,6 @@
         </a>
     </div>
 
-
-    <!-- Locomotive Scroll JS -->
-    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
@@ -245,18 +218,10 @@
                 { id: 8, src: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1776&q=80', title: 'Stardust', category: 'Astrophotography', camera: 'Canon EOS Ra', lens: '15-35mm f/2.8', iso: '6400', fstop: '2.8' },
             ];
 
-            // --- INITIALIZE LOCOMOTIVE SCROLL ---
-            const scroll = new LocomotiveScroll({
-                el: document.querySelector('[data-scroll-container]'),
-                smooth: true,
-                tablet: { smooth: true },
-                smartphone: { smooth: true }
-            });
-
-            // Update header style on scroll
+            // --- HEADER SCROLL LOGIC ---
             const headerBg = document.getElementById('header-bg');
-            scroll.on('scroll', (args) => {
-                if (args.scroll.y > 20) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 20) {
                     headerBg.style.backgroundColor = 'var(--glass-background)';
                     headerBg.style.backdropFilter = `blur(var(--glass-blur))`;
                     headerBg.style.borderBottom = 'var(--glass-border)';
@@ -288,9 +253,7 @@
                     item.className = 'group relative rounded-lg overflow-hidden cursor-pointer fade-in-item';
                     item.style.gridColumn = `span ${image.gridSpanCol || 1}`;
                     item.style.gridRow = `span ${image.gridSpanRow || 1}`;
-                    item.style.transitionDelay = `${index * 50}ms`; // Staggered animation delay
-                    item.setAttribute('data-scroll', '');
-                    // Removed the random data-scroll-speed to prevent overlapping
+                    item.style.transitionDelay = `${index * 50}ms`;
                     
                     item.innerHTML = `
                         <img src="${image.src}" alt="${image.title}" loading="lazy" class="w-full h-full object-cover transform transition-all duration-500 ease-in-out group-hover:scale-105 group-hover:-translate-y-1" />
@@ -305,8 +268,7 @@
                     item.addEventListener('click', () => openLightbox(index));
                     galleryGrid.appendChild(item);
                 });
-                // After updating the DOM, we need to tell Locomotive Scroll to update its calculations.
-                scroll.update();
+                setupIntersectionObserver();
             }
 
             function renderFilterButtons() {
@@ -331,12 +293,12 @@
                 currentLightboxIndex = index;
                 updateLightboxContent();
                 lightbox.style.display = 'flex';
-                scroll.stop();
+                document.body.style.overflow = 'hidden';
             }
 
             function closeLightbox() {
                 lightbox.style.display = 'none';
-                scroll.start();
+                document.body.style.overflow = 'auto';
             }
 
             function updateLightboxContent() {
@@ -373,6 +335,22 @@
                     if (e.key === 'ArrowLeft') showPrevImage();
                 }
             });
+            
+            // --- SCROLL ANIMATION LOGIC ---
+            function setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-inview');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.fade-in-item').forEach(item => {
+                    observer.observe(item);
+                });
+            }
 
             // --- INITIALIZE ---
             const heroTitle = document.getElementById('hero-title');
@@ -388,11 +366,9 @@
             renderFilterButtons();
             renderGallery();
             
-            // This is the fix: Update scroll after all images are loaded
             window.addEventListener('load', () => {
                 const preloader = document.getElementById('preloader');
                 preloader.classList.add('loaded');
-                scroll.update();
             });
         });
     </script>
