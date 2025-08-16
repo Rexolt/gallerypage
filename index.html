@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nocturne Gallery</title>
+    <title>Mészáros Bálint Gallery</title>
     
-    <!-- Tailwind CSS for utility classes -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* --- GLOBAL STYLES & FONTS --- */
+      
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,700&family=Poppins:wght@300;400&display=swap');
 
         :root {
@@ -32,7 +32,7 @@
             font-family: var(--font-body);
         }
         
-        /* --- PRELOADER STYLES --- */
+        
         #preloader {
             position: fixed;
             top: 0;
@@ -62,7 +62,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* --- ANIMATION STYLES --- */
+        
         @keyframes ken-burns { 0% { transform: scale(1.1) rotate(1deg); } 100% { transform: scale(1) rotate(0deg); } }
         @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
         @keyframes zoom-in { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
@@ -72,7 +72,7 @@
         .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
         .animate-zoom-in { animation: zoom-in 0.3s ease-out forwards; }
         
-        /* Hero title letter animation */
+        
         #hero-title span {
             display: inline-block;
             opacity: 0;
@@ -86,7 +86,7 @@
             }
         }
 
-        /* Scroll reveal animations */
+        
         .fade-in-item {
             opacity: 0;
             transform: translateY(50px);
@@ -97,7 +97,7 @@
             transform: translateY(0);
         }
 
-        /* Ko-fi Button Styling */
+        
         #kofi-button-container {
             position: fixed;
             bottom: 20px;
@@ -111,15 +111,15 @@
     </style>
 </head>
 <body>
-    <!-- Preloader -->
+    
     <div id="preloader">
         <div class="loader"></div>
     </div>
 
-    <!-- Main container -->
+    
     <div>
 
-        <!-- Header -->
+        
         <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
             <div id="header-bg" class="transition-all duration-300 py-5">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
@@ -129,7 +129,7 @@
         </header>
 
         <main>
-            <!-- Hero Section -->
+           
             <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-cover bg-center animate-ken-burns" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')"></div>
                 <div class="absolute inset-0 bg-black/70"></div>
@@ -144,18 +144,18 @@
                 </div>
             </section>
 
-            <!-- Gallery Section -->
+            
             <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
                 <div id="filter-buttons" class="flex justify-center flex-wrap gap-3 mb-12">
-                    <!-- Filter buttons will be injected here by JavaScript -->
+                    
                 </div>
                 <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6" style="grid-auto-flow: dense;">
-                    <!-- Gallery items will be injected here by JavaScript -->
+                    
                 </div>
             </section>
         </main>
 
-        <!-- Footer -->
+        
         <footer class="py-8 text-center border-t border-[var(--color-border)]">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <p class="text-[var(--color-text-muted)] text-sm">
@@ -166,7 +166,7 @@
 
     </div>
 
-    <!-- Lightbox Structure (hidden by default) -->
+    
     <div id="lightbox" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4 animate-fade-in">
         <div class="relative w-full max-w-7xl h-full flex items-center justify-center">
             <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
@@ -196,7 +196,6 @@
         </div>
     </div>
     
-    <!-- Ko-fi Button Container -->
     <div id="kofi-button-container">
         <a href='https://ko-fi.com/D1D2182JKJ' target='_blank'>
             <img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' />
@@ -206,20 +205,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            // --- GALLERY DATA ---
+            
             const images = [
-                { id: 1, src: 'https://imgur.com/246ae24c-9e14-4552-bfda-0d74076a129b', title: 'Tenerife', category: 'Landscape', camera: 'Canon EOS 2000d', lens: 'EF-S 18-55mm', iso: '300', fstop: '10.0', gridSpanCol: 2, gridSpanRow: 1.5 },
-                { id: 2, src: 'https://images.unsplash.com/photo-1755040074382-2fcfa20e777e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'TIME', category: 'B&W', camera: 'Fujifilm xs-20', lens: '15-45mm ', iso: '100', fstop: '5.5', gridSpanCol: 2, gridSpanRow: 1.5 },
-                { id: 9, src: 'https://images.unsplash.com/photo-1755040074381-1cfd64f05149?q=80&w=734&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'TIME 2', category: 'B&W', camera: 'Fujifilm xs-20', lens: '15-45mm', iso: '100', fstop: '5.5', gridSpanCol: 2, gridSpanRow: 1.5},
-                { id: 4, src: 'https://images.unsplash.com/photo-1755039758257-796a1393e5f1?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'old Light', category: 'Urban', camera: 'Fujifilm xs-20', lens: '15-45mm', iso: '600', fstop: '5.5', gridSpanCol: 2 },
-                { id: 5, src: 'https://images.unsplash.com/photo-1755039751912-7cf38532bb61?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Golden time', category: 'Urban', camera: 'Fujifilm xs-20', lens: '15-45mm', iso: '100', fstop: '5.5' ,gridSpanCol: 2, gridSpanRow: 1.5},
-                { id: 6, src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1875&q=80', title: 'Emerald Valley', category: 'Landscape', camera: 'Hasselblad X1D II', lens: '45mm f/4', iso: '100', fstop: '9.0', gridSpanCol: 2 },
-                { id: 7, src: 'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=1770&q=80', title: 'Hidden Falls', category: 'Nature', camera: 'Sony A7 III', lens: '24-70mm f/2.8', iso: '400', fstop: '2.8', gridSpanRow: 2 },
-                { id: 8, src: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%D%3D%3D&auto=format&fit=crop&w=774&q=80', title: 'Studio Light', category: 'Portrait', camera: 'Fujifilm GFX 100S', lens: '110mm f/2', iso: '100', fstop: '2.8', gridSpanCol: 2, gridSpanRow: 1.5 },
-                { id: 3, src: 'https://images.unsplash.com/photo-1504213413426-31e3a73c093a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80', title: 'Stairway', category: 'B&W', camera: 'Leica M6', lens: '35mm Summicron', fstop: 'f/8', iso: '400', gridSpanCol: 2, gridSpanRow: 1.5},
+                { id: 1, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/03/23-03-05-828_960_720.jpg', title: 'Flow', category: 'B&W',  camera: 'Canon EOS 2000d', lens: 'EF-S 18-55mm', iso: '300', fstop: 'N', gridSpanCol: 4, gridSpanRow: 1 },
+                { id: 2, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/02/23-02-05-240_960_720.jpg', title: 'Falling Time', category: 'Landscape', camera: 'canon eos 2000d', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', gridSpanCol: 4, gridSpanRow: 1 },
+                { id: 3, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/07/23-07-59-381_960_720.png', title: 'Monkey time', category: 'Nature', camera: 'canon eos 2000d', lens: '75-300mm', iso: '100', fstop: 'N' ,gridSpanCol: 2, gridSpanRow: 1.5},
+                { id: 4, src: 'https://cdn.pixabay.com/photo/2025/08/15/22/57/22-57-52-907_960_720.png', title: 'Lonliness', category: 'Urban', camera: 'canon eos 2000d', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', gridSpanCol: 2, gridSpanRow: 1.5 },
+                { id: 5, src: 'https://cdn.pixabay.com/photo/2025/08/15/22/51/22-51-51-309_960_720.png', title: 'Street', category: 'Urban', camera: 'canon eos 2000d', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', gridSpanCol: 2, gridSpanRow: 1.5 },
+                { id: 6, src: 'https://images.unsplash.com/photo-1755040074381-1cfd64f05149?q=80&w=734&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'The Time', category: 'B&W', camera: 'Fujifilm XS-20', lens: '15-45mm', iso: '100', fstop: '5.5', gridSpanCol: 2 },
+                { id: 7, src: 'https://images.unsplash.com/photo-1755039758257-796a1393e5f1?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Old Light', category: 'B&W', camera: 'Fujifilm XS-20', lens: '15-45mm', fstop: '5.5', iso: '400', gridSpanCol: 2, gridSpanRow: 1.5},
+                { id: 8, src: 'https://images.unsplash.com/photo-1755039751912-7cf38532bb61?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Golden Time', category: 'Urban', camera: 'Fujifilm XS-20', lens: '15-45mm', iso: '300', fstop: '5.5', gridSpanCol: 2, gridSpanRow: 1.5},
+                { id: 9, src: 'https://images.unsplash.com/photo-1755301621825-f7466536811a?q=80&w=1175&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Chill', category: 'Nature', camera: 'Olympus is-200', lens: '24-110mm', iso: '400 ILFORD HP-5 PLUS', fstop: 'N', gridSpanCol: 2 },
+                { id: 10, src: 'https://images.unsplash.com/photo-1755301626520-85f586776110?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwcm9maWxlLXBhZ2V8MXx8fGVufDB8fHx8fA%3D%3D', title: 'Opss!', category: 'Portrait', camera: 'Fujifilm XS-20', lens: '15-45mm', iso: '300', fstop: 'N'},
+
+                { id: 11, src: 'https://images.unsplash.com/photo-1755301626458-aa87308d4ccd?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Running', category: 'Urban', camera: 'Fujifilm XS-20', lens: '15-45mm', iso: '200', fstop: '5.5'},
+
+                //{ id: 12, src: 'https://images.unsplash.com/photo-1610276198568-eb6d0ff53e48?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Winter Sun', category: 'Portrait', camera: 'Sony A1', lens: '85mm f/1.4', iso: '100', fstop: '1.6', gridSpanRow: 2},
+                //{ id: 13, src: 'https://images.unsplash.com/photo-1519011985187-444d62641aa2?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'The Look', category: 'B&W', camera: 'Leica M11', lens: '35mm Summilux', iso: '800', fstop: '1.4'},
+                //{ id: 14, src: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Misty Morning', category: 'Landscape', camera: 'Nikon Z8', lens: '14-24mm f/2.8', iso: '64', fstop: '11'} 
             ];
 
-            // --- HEADER SCROLL LOGIC ---
             const headerBg = document.getElementById('header-bg');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 20) {
@@ -237,7 +242,6 @@
                 }
             });
 
-            // --- GALLERY LOGIC ---
             const galleryGrid = document.getElementById('gallery-grid');
             const filterButtonsContainer = document.getElementById('filter-buttons');
             const lightbox = document.getElementById('lightbox');
@@ -289,7 +293,7 @@
                 });
             }
 
-            // --- LIGHTBOX LOGIC ---
+            
             function openLightbox(index) {
                 currentLightboxIndex = index;
                 updateLightboxContent();
@@ -337,7 +341,7 @@
                 }
             });
             
-            // --- SCROLL ANIMATION LOGIC ---
+            
             function setupIntersectionObserver() {
                 const observer = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
@@ -353,11 +357,11 @@
                 });
             }
 
-            // --- INITIALIZE ---
+            
             const heroTitle = document.getElementById('hero-title');
             const heroSubtitle = document.getElementById('hero-subtitle');
-            const titleText = "Moments in Low Light";
-            const subtitleText = "Exploring the world after dusk.";
+            const titleText = "Moments in Life";
+            const subtitleText = "Exploring the world with light.";
 
             heroTitle.innerHTML = titleText.split('').map((letter, i) =>
                 `<span style="animation-delay: ${i * 0.05 + 0.5}s">${letter === ' ' ? '&nbsp;' : letter}</span>`
