@@ -49,14 +49,13 @@
         #kofi-button-container { position: fixed; bottom: 20px; left: 20px; z-index: 100; transition: transform 0.3s ease-in-out; }
         #kofi-button-container:hover { transform: scale(1.05); }
 
-        /* --- MASONRY LAYOUT FIX --- */
-        /* A képek természetes arányban maradnak, nem nyúlnak és nem törik meg egymást. */
+
         .masonry-item { 
             break-inside: avoid; 
             -webkit-column-break-inside: avoid; 
             -moz-column-break-inside: avoid; 
             position: relative;
-            border-radius: 0.5rem; /* rounded-lg */
+            border-radius: 0.5rem; 
             overflow: hidden;
         }
         .masonry-item img { display: block; width: 100%; height: auto; }
@@ -75,12 +74,12 @@
         </header>
 
         <main>
-            <!-- HERO -->
             <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-cover bg-center animate-ken-burns" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1770&q=80')"></div>
                 <div class="absolute inset-0 bg-black/70"></div>
                 <div class="relative z-10 p-4 text-white">
-                    <h2 id="hero-title" class="font-display text-5xl sm:text-6xl md:text-8xl font-bold"></h2>
+                    <h2 id="hero-title" class="font-display text-4xl sm:text-6xl md:text-8xl font-bold"></h2>
+
                     <p id="hero-subtitle" class="mt-4 text-lg md:text-xl text-[var(--color-text)] max-w-2xl mx-auto opacity-0" style="animation: fade-in-up 1s ease-out 1s forwards;"></p>
                 </div>
                 <div class="absolute bottom-10 animate-bounce opacity-0" style="animation: fade-in 1s ease 2s forwards;">
@@ -88,10 +87,9 @@
                 </div>
             </section>
 
-            <!-- GALÉRIA -->
+           
             <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
                 <div id="filter-buttons" class="flex justify-center flex-wrap gap-3 mb-12"></div>
-                <!-- CSS columns alapú masonry: a képek magassága természetes, nem torzulnak. -->
                 <div id="gallery-grid" class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6"></div>
             </section>
         </main>
