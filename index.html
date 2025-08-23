@@ -32,12 +32,13 @@
   <style>
     :root {
       --font-display: 'Bodoni Moda', serif;
-      /*--font-display: 'DM Sans', sans-serif;*/
       --font-body: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
       --color-background: #0a0a0a;
       --color-text: #e6e6e6;
       --color-text-muted: #a1a1a1;
       --color-accent: #3b82f6;
+      --color-accent-weak: rgba(59,130,246,.4);
       --color-border: rgba(255,255,255,0.1);
       --glass-background: rgba(23,23,23,0.5);
       --glass-blur: 10px;
@@ -46,11 +47,13 @@
     html { scroll-behavior: smooth; }
     body { margin: 0; background: var(--color-background); color: var(--color-text); font-family: var(--font-body); }
 
+    /* Preloader */
     #preloader{position:fixed;inset:0;background:var(--color-background);z-index:9999;display:flex;justify-content:center;align-items:center;transition:opacity .5s ease-out .5s}
     #preloader.loaded{opacity:0;pointer-events:none}
     .loader{width:50px;height:50px;border:5px solid var(--color-border);border-top-color:var(--color-accent);border-radius:50%;animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
+    /* hero animok */
     @keyframes ken-burns{0%{transform:scale(1.1) rotate(1deg)}100%{transform:scale(1) rotate(0)}}
     @keyframes fade-in{0%{opacity:0}100%{opacity:1}}
     @keyframes zoom-in{0%{opacity:0;transform:scale(.95)}100%{opacity:1;transform:scale(1)}}
@@ -69,38 +72,103 @@
     .masonry-item img{display:block;width:100%;height:auto}
 
     @media (max-width: 400px){
-      #hero-title{font-size:2.25rem;} /* ~36px */
+      #hero-title{font-size:2.25rem;}
     }
 
     #scroll-progress{position:fixed;top:0;left:0;height:3px;background:var(--color-accent);width:0%;z-index:60}
 
+    /* ===================== BRAND-KOMPATIBILIS GOMBOK ===================== */
+    .btn{
+      position:relative;
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:.5rem;
+      font-weight:600;
+      border-radius:9999px;
+      padding:.75rem 1.25rem;
+      line-height:1;
+      color:var(--color-text);
+      transition:transform .25s cubic-bezier(.19,1,.22,1), box-shadow .25s cubic-bezier(.19,1,.22,1), background-color .25s ease, border-color .25s ease, color .25s ease;
+      will-change: transform, box-shadow;
+      overflow:hidden;
+      isolation:isolate;
+    }
+    .btn::before{
+      content:""; position:absolute; inset:-1px;
+      background: linear-gradient(120deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+      opacity:0; transition:opacity .25s ease, transform .8s ease;
+      transform: translateX(-30%);
+      z-index:-1; border-radius:inherit;
+    }
+    .btn:hover{ transform: translateY(-2px); box-shadow:0 8px 24px -8px var(--color-accent-weak); }
+    .btn:hover::before{ opacity:1; transform: translateX(0%); }
+
+    .btn:after{
+      content:""; position:absolute; left:50%; top:50%; width:0; height:0; border-radius:50%;
+      background: radial-gradient(circle, rgba(59,130,246,.4) 0%, rgba(59,130,246,0) 60%);
+      transform:translate(-50%,-50%); opacity:0; pointer-events:none;
+    }
+    .btn:active{ transform: translateY(0); box-shadow:0 4px 12px -6px var(--color-accent-weak); }
+    .btn:active:after{ animation: ripple .5s ease-out forwards; }
+    @keyframes ripple{ 0%{ width:0; height:0; opacity:.6;} 100%{ width:260%; height:260%; opacity:0;} }
+
+    .btn--primary{
+      background: linear-gradient(180deg, color-mix(in sRGB, var(--color-accent) 70%, #fff 0%) 0%, color-mix(in sRGB, var(--color-accent) 55%, #000 30%) 100%);
+      border:1px solid color-mix(in sRGB, var(--color-accent) 70%, #000 30%); color:#fff;
+    }
+    .btn--primary:hover{ background: linear-gradient(180deg, color-mix(in sRGB, var(--color-accent) 85%, #fff 0%) 0%, color-mix(in sRGB, var(--color-accent) 65%, #000 20%) 100%); }
+
+    .btn--outline{ background: rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.15); color:#fff; backdrop-filter: blur(6px); }
+    .btn--outline:hover{ border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.06); }
+
+    .btn--ghost{ background: transparent; border:1px solid transparent; color: rgba(255,255,255,.9); }
+    .btn--ghost:hover{ border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.04); color:#fff; }
+
+    .btn--chip{
+      padding:.55rem 1rem; font-weight:600;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--color-text);
+      backdrop-filter: blur(6px);
+    }
+    .btn--chip.is-active{
+      background: color-mix(in sRGB, var(--color-accent) 20%, #0a0a0a 80%);
+      border-color: var(--color-accent);
+      color:#fff;
+      box-shadow: 0 6px 18px -8px var(--color-accent-weak);
+    }
+
+    /* ===================== MOBIL NAV LENYÍLÓ ANIMÁCIÓ ===================== */
+    #mobile-menu{
+      overflow:hidden;
+      max-height:0;
+      opacity:0;
+      transform: translateY(-8px);
+      filter: blur(4px);
+      transition: max-height .5s cubic-bezier(.22,1,.36,1), opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1), filter .45s ease;
+    }
+    #mobile-menu.is-open{
+      max-height: 420px;
+      opacity:1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+    #mobile-menu .menu-item{
+      opacity:0; transform: translateY(10px) scale(.98);
+      transition: opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1);
+    }
+    #mobile-menu.is-open .menu-item{ opacity:1; transform: translateY(0) scale(1); }
+    #mobile-menu.is-open .menu-item:nth-child(1){ transition-delay: .05s; }
+    #mobile-menu.is-open .menu-item:nth-child(2){ transition-delay: .10s; }
+    #mobile-menu.is-open .menu-item:nth-child(3){ transition-delay: .15s; }
+    #mobile-menu.is-open .menu-item:nth-child(4){ transition-delay: .20s; }
+
     /* ============ MOBILOS KO-FI „ELPORLÁS” ANIMÁCIÓ ============ */
-    #kofi-button-container {
-      transition: opacity .35s ease, transform .35s ease, filter .35s ease;
-      will-change: opacity, transform, filter;
-      position: fixed;
-    }
+    #kofi-button-container { transition: opacity .35s ease, transform .35s ease, filter .35s ease; will-change: opacity, transform, filter; position: fixed; }
     @media (max-width: 767px) {
-      #kofi-button-container.dusting-out {
-        pointer-events: none;
-        opacity: 0;
-        transform: scale(0.92);
-        filter: blur(1px);
-      }
+      #kofi-button-container.dusting-out { pointer-events: none; opacity: 0; transform: scale(0.92); filter: blur(1px); }
     }
-    .kofi-dust-particle {
-      position: absolute;
-      width: 4px; height: 4px;
-      border-radius: 9999px;
-      background: rgba(255,255,255,.9);
-      opacity: 0;
-      animation: kofi-particle 650ms ease-out forwards;
-      will-change: transform, opacity;
-    }
-    @keyframes kofi-particle {
-      0%   { opacity: 1; transform: translate(0,0) scale(1); }
-      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
-    }
+    .kofi-dust-particle { position: absolute; width: 4px; height: 4px; border-radius: 9999px; background: rgba(255,255,255,.9); opacity: 0; animation: kofi-particle 650ms ease-out forwards; will-change: transform, opacity; }
+    @keyframes kofi-particle { 0%{ opacity:1; transform: translate(0,0) scale(1);} 100%{ opacity:0; transform: translate(var(--dx), var(--dy)) scale(0.3);} }
     /* =========================================================== */
   </style>
 </head>
@@ -116,22 +184,23 @@
           <span class="hidden sm:block font-semibold text-sm opacity-90"></span>
         </a>
 
-        <nav class="hidden md:flex items-center gap-6 text-sm">
-          <a id="nav-gallery" href="#gallery" class="text-white/90 hover:text-white">Galéria</a>
-          <a id="nav-about" href="#about" class="text-white/90 hover:text-white">Rólam</a>
-          <a id="nav-contact" href="#contact" class="text-white/90 hover:text-white">Kapcsolat</a>
-          <button id="lang-toggle" class="px-3 py-1.5 rounded-full border border-white/30 text-white text-xs" aria-label="Váltás magyar és angol között">HU / EN</button>
+        <nav class="hidden md:flex items-center gap-3 text-sm">
+          <a id="nav-gallery" href="#gallery" class="btn btn--ghost">Galéria</a>
+          <a id="nav-about" href="#about" class="btn btn--ghost">Rólam</a>
+          <a id="nav-contact" href="#contact" class="btn btn--ghost">Kapcsolat</a>
+          <button id="lang-toggle" class="btn btn--outline px-3 py-1.5 text-xs" aria-label="Váltás magyar és angol között">HU / EN</button>
         </nav>
 
-        <button id="mobile-menu-btn" class="md:hidden px-3 py-2 rounded border border-white/30 text-white" aria-label="Menü megnyitása">☰</button>
+        <button id="mobile-menu-btn" class="btn btn--outline md:hidden px-3 py-2" aria-label="Menü megnyitása" aria-expanded="false" aria-controls="mobile-menu">☰</button>
       </div>
 
-      <div id="mobile-menu" class="md:hidden container mx-auto px-4 sm:px-6 lg:px-8 hidden">
+      <!-- MOBIL MENÜ (animált) -->
+      <div id="mobile-menu" class="md:hidden container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mt-3 flex flex-col gap-2 pb-3">
-          <a id="nav-gallery-m" href="#gallery" class="py-2 border-b border-white/10 text-white">Galéria</a>
-          <a id="nav-about-m" href="#about" class="py-2 border-b border-white/10 text-white">Rólam</a>
-          <a id="nav-contact-m" href="#contact" class="py-2 border-b border-white/10 text-white">Kapcsolat</a>
-          <button id="lang-toggle-m" class="mt-2 w-max px-3 py-1.5 rounded-full border border-white/30 text-xs text-white">HU / EN</button>
+          <a id="nav-gallery-m" href="#gallery" class="menu-item btn btn--ghost py-2 text-white text-center">Galéria</a>
+          <a id="nav-about-m" href="#about" class="menu-item btn btn--ghost py-2 text-white text-center">Rólam</a>
+          <a id="nav-contact-m" href="#contact" class="menu-item btn btn--ghost py-2 text-white text-center">Kapcsolat</a>
+          <button id="lang-toggle-m" class="menu-item btn btn--outline mt-2 w-max px-3 py-1.5 text-xs text-white">HU / EN</button>
         </div>
       </div>
     </div>
@@ -146,8 +215,8 @@
         <p id="hero-subtitle" class="mt-4 text-base sm:text-lg md:text-xl text-[var(--color-text)] max-w-2xl mx-auto opacity-0" style="animation: fade-in-up 1s ease-out 1s forwards;"></p>
 
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 opacity-0" style="animation: fade-in-up .8s ease-out 1.4s forwards;">
-          <a id="cta-gallery" href="#gallery" class="px-6 py-3 rounded-full bg-[var(--color-accent)] text-white font-semibold">Nézd meg a galériát</a>
-          <a id="cta-instagram" href="https://www.instagram.com/meszarosb.photography/" target="_blank" class="px-6 py-3 rounded-full border border-white/40 hover:border-white/60 text-white">Kövess Instagramon</a>
+          <a id="cta-gallery" href="#gallery" class="btn btn--primary px-6 py-3 rounded-full font-semibold">Nézd meg a galériát</a>
+          <a id="cta-instagram" href="https://www.instagram.com/meszarosb.photography/" target="_blank" class="btn btn--outline px-6 py-3 rounded-full">Kövess Instagramon</a>
         </div>
       </div>
       <div class="absolute bottom-10 animate-bounce opacity-0" style="animation: fade-in 1s ease 2s forwards;">
@@ -170,8 +239,8 @@
               17 éves vagyok, négy éve fotózom. Számomra a fényképezés nem egyszerűen képkészítés, hanem önkifejezés: egy módja annak, hogy a világot a saját szemszögemből mutassam meg. Nem a tökéletességet keresem, és nem az a célom, hogy mindenki számára tetszetős képeket készítsek. Sokkal inkább a pillanatok érdekelnek – azok a történések, gesztusok és részletek, amelyek mellett az emberek többsége észrevétlenül elsétál. Hiszek abban, hogy a legapróbb dolgok hordozzák a legtöbb szépséget. A fotózás közben nem kívülálló vagyok, hanem belehelyezkedem a helyzetbe: láthatatlanná válok, részt veszek, figyelek. Így tudom elkapni az őszinte, zavartalan pillanatokat, legyen szó gyerekekről, felnőttekről, városról vagy hétköznapi jelenetekről. A képeim nem akarnak többnek látszani, mint amik: őszinte lenyomatok. A világ apró töredékei, amelyekben benne van a saját történetem és látásmódom
             </p>
             <div class="mt-6 flex gap-3">
-              <a id="about-cta-contact" href="#contact" class="px-5 py-2 rounded-full bg-[var(--color-accent)] text-white font-semibold">Kapcsolat</a>
-              <a id="about-cta-featured" href="#gallery" class="px-5 py-2 rounded-full border border-white/15 hover:border-white/35 text-white">Kiemelt képek</a>
+              <a id="about-cta-contact" href="#contact" class="btn btn--primary px-5 py-2 rounded-full font-semibold">Kapcsolat</a>
+              <a id="about-cta-featured" href="#gallery" class="btn btn--outline px-5 py-2 rounded-full">Kiemelt képek</a>
             </div>
           </div>
         </div>
@@ -185,23 +254,21 @@
 
         <div class="max-w-xl mx-auto grid sm:grid-cols-2 gap-4">
           <a href="https://www.instagram.com/meszarosb.photography/" target="_blank" rel="noopener"
-             class="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+             class="btn btn--outline flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-white">
+            <svg xmlns="http://www.w3.org/0 0 24 24" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 2.5A3.5 3.5 0 1 0 12 17.5 3.5 3.5 0 0 0 12 9.5zm5.25-2.75a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
             </svg>
             <span id="contact-ig-text">Instagram <span class="opacity-80">@meszarosb.photography</span></span>
           </a>
 
           <a href="https://www.facebook.com/share/1KfqWgWaNY/" target="_blank" rel="noopener"
-             class="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+             class="btn btn--outline flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-white">
+            <svg xmlns="http://www.w3.org/0 0 24 24" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07C1.86 17.06 5.54 21.2 10.3 22v-7.02H7.72v-2.91h2.58V9.41c0-2.55 1.52-3.96 3.85-3.96 1.12 0 2.3.2 2.3.2v2.54h-1.3c-1.28 0-1.68.8-1.68 1.62v1.95h2.85l-.46 2.91h-2.39V22c4.77-.8 8.45-4.94 8.45-9.93z"/>
             </svg>
             <span id="contact-fb-text">Facebook <span class="opacity-80">/Mészáros Bálint Photography</span></span>
           </a>
         </div>
-
-        
       </div>
     </section>
   </main>
@@ -214,7 +281,7 @@
 
   <div id="lightbox" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4 animate-fade-in">
     <div class="relative w-full max-w-7xl h-full flex items-center justify-center">
-      <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="Előző">
+      <button id="lightbox-prev" class="btn btn--outline absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full text-white" aria-label="Előző">
         <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
       </button>
       <div class="w-full h-full max-h=[90vh] max-w-[90vw] flex flex-col md:flex-row gap-4">
@@ -227,15 +294,16 @@
           <div class="space-y-2 text-sm text-[var(--color-text-muted)] border-t border-[var(--color-border)] pt-4 mt-4">
             <span><strong id="label-camera">Fényképező:</strong> <span id="lightbox-camera"></span></span><br />
             <span><strong id="label-lens">Objektív:</strong> <span id="lightbox-lens"></span></span><br />
+            <span><strong id="label-film">Film:</strong> <span id="lightbox-film"></span></span><br />
             <span><strong id="label-iso">ISO:</strong> <span id="lightbox-iso"></span></span><br />
             <span><strong id="label-aperture">Rekesz:</strong> f/<span id="lightbox-fstop"></span></span>
           </div>
         </div>
       </div>
-      <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="Következő">
+      <button id="lightbox-next" class="btn btn--outline absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full text-white" aria-label="Következő">
         <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
       </button>
-      <button id="lightbox-close" class="absolute top-4 right-4 z-20 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="Bezárás">
+      <button id="lightbox-close" class="btn btn--outline absolute top-4 right-4 z-20 p-2 rounded-full text-white" aria-label="Bezárás">
         <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
       </button>
     </div>
@@ -279,7 +347,7 @@
             instagram: "Instagram",
             facebook: "Facebook"
           },
-          lightbox: { camera: "Fényképező", lens: "Objektív", iso: "ISO", aperture: "Rekesz" },
+          lightbox: { camera: "Fényképező", lens: "Objektív", film: "Film", iso: "ISO", aperture: "Rekesz" },
           footer: "© 2025 Mészáros Bálint. Minden pillanat megőrizve.",
           aria: { prev: "Előző", next: "Következő", close: "Bezárás" }
         },
@@ -311,7 +379,7 @@
             instagram: "Instagram",
             facebook: "Facebook"
           },
-          lightbox: { camera: "Camera", lens: "Lens", iso: "ISO", aperture: "Aperture" },
+          lightbox: { camera: "Camera", lens: "Lens", film: "Film", iso: "ISO", aperture: "Aperture" },
           footer: "© 2025 Bálint Mészáros. All moments captured.",
           aria: { prev: "Previous", next: "Next", close: "Close" }
         }
@@ -380,6 +448,7 @@
 
         document.getElementById('label-camera').textContent   = L.lightbox.camera + ':';
         document.getElementById('label-lens').textContent     = L.lightbox.lens + ':';
+        document.getElementById('label-film').textContent     = L.lightbox.film + ':';
         document.getElementById('label-iso').textContent      = L.lightbox.iso + ':';
         document.getElementById('label-aperture').textContent = L.lightbox.aperture + ':';
         document.getElementById('lightbox-prev').setAttribute('aria-label', L.aria.prev);
@@ -396,24 +465,26 @@
         applyLang(currentLang === 'hu' ? 'en' : 'hu');
       }
 
+      /* ==================== KÉPADATOK – több kategória + film ==================== */
       const images = [
-        { id: 1, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/03/23-03-05-828_960_720.jpg', title: 'Flow', category: 'B&W',  camera: 'Canon EOS 2000d', lens: 'EF-S 18-55mm', iso: '300', fstop: 'N', orientation: 'landscape' },
-        { id: 2, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/02/23-02-05-240_960_720.jpg', title: 'Falling Time', category: 'Landscape', camera: 'Canon EOS 2000D', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', orientation: 'landscape' },
-        { id: 3, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/07/23-07-59-381_960_720.png', title: 'Monkey time', category: 'Nature', camera: 'Canon EOS 2000D', lens: '75-300mm', iso: '100', fstop: 'N' , orientation: 'portrait'},
-        { id: 4, src: 'https://cdn.pixabay.com/photo/2025/08/15/22/57/22-57-52-907_960_720.png', title: 'Loneliness', category: 'Urban', camera: 'Canon EOS 2000D', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N' },
-        { id: 5, src: 'https://cdn.pixabay.com/photo/2025/08/15/22/51/22-51-51-309_960_720.png', title: 'Street', category: 'Urban', camera: 'Canon EOS 2000D', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', orientation: 'landscape' },
-        { id: 6, src: 'https://images.unsplash.com/photo-1755040074381-1cfd64f05149?q=80&w=734&auto=format&fit=crop', title: 'The Time', category: 'B&W', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '5.5', orientation: 'landscape' },
-        { id: 7, src: 'https://images.unsplash.com/photo-1755039758257-796a1393e5f1?q=80&w=687&auto=format&fit=crop', title: 'Old Light', category: 'B&W', camera: 'Fujifilm X-S20', lens: '15-45mm', fstop: '5.5', iso: '400', orientation: 'portrait'},
-        { id: 8, src: 'https://images.unsplash.com/photo-1755039751912-7cf38532bb61?q=80&w=687&auto=format&fit=crop', title: 'Golden Time', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '300', fstop: '5.5', orientation: 'landscape'},
-        { id: 9, src: 'https://images.unsplash.com/photo-1755301621825-f7466536811a?q=80&w=1175&auto=format&fit=crop', title: 'Chill', category: 'Nature', camera: 'Olympus IS-200', lens: '24-110mm', iso: '400 ILFORD HP-5 PLUS', fstop: 'N', orientation: 'landscape' },
-        { id: 10, src: 'https://images.unsplash.com/photo-1755301626520-85f586776110?w=800&auto=format&fit=crop&q=60', title: 'Opss!', category: 'Portrait', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '300', fstop: 'N', orientation: 'portrait'},
-        { id: 11, src: 'https://images.unsplash.com/photo-1755301626458-aa87308d4ccd?q=80&w=687&auto=format&fit=crop', title: 'Running', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '200', fstop: '5.5'},
-        { id: 12, src: 'https://images.unsplash.com/photo-1755552640181-500470469579?q=80&w=685&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Just playing', category: 'B&W', camera: 'Olympus IS-200', lens: '24-110mm', iso: '400 ILFORD HP-5 PLUS', fstop: 'N'},
-        { id: 13, src: 'https://i.postimg.cc/Z5ygkMst/71670010.jpg', title: 'Rescuing the Toy', category: 'B&W', camera: 'Olympus IS-200', lens: '24-110mm', iso: '400 ILFORD HP-5 PLUS', fstop: 'N'},
-        { id: 14, src: 'https://i.postimg.cc/JndTyjXS/DSCF1285.jpg', title: 'Rope', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '4.5', orientation: 'landscape'},
-        { id: 15, src: 'https://i.postimg.cc/1tzC5v8p/DSCF1279.jpg', title: 'Ship', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '4.5', orientation: 'portrait'},
-        { id: 16, src: 'https://i.postimg.cc/PJpS1NzJ/DSCF1255.jpg', title: 'Passing Souls', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '80', fstop: '22', orientation: 'portrait'}
+        { id: 1, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/03/23-03-05-828_960_720.jpg', title: 'Flow', categories: ['B&W','Urban'],  camera: 'Canon EOS 2000D', lens: 'EF-S 18-55mm', iso: '300', fstop: 'N', film: 'Digitális', orientation: 'landscape' },
+        { id: 2, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/02/23-02-05-240_960_720.jpg', title: 'Falling Time', categories: ['Landscape','Nature'], camera: 'Canon EOS 2000D', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', film: 'Digitális', orientation: 'landscape' },
+        { id: 3, src: 'https://cdn.pixabay.com/photo/2025/08/15/23/07/23-07-59-381_960_720.png', title: 'Monkey time', categories: ['Nature','Portrait'], camera: 'Canon EOS 2000D', lens: '75-300mm', iso: '100', fstop: 'N' , film: 'Digitális', orientation: 'portrait'},
+        { id: 4, src: 'https://cdn.pixabay.com/photo/2025/08/15/22/57/22-57-52-907_960_720.png', title: 'Loneliness', categories: ['Urban','B&W'], camera: 'Canon EOS 2000D', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', film: 'Digitális' },
+        { id: 5, src: 'https://cdn.pixabay.com/photo/2025/08/15/22/51/22-51-51-309_960_720.png', title: 'Street', categories: ['Urban'], camera: 'Canon EOS 2000D', lens: 'EF-S 18-55mm', iso: '100', fstop: 'N', film: 'Digitális', orientation: 'landscape' },
+        { id: 6, src: 'https://images.unsplash.com/photo-1755040074381-1cfd64f05149?q=80&w=734&auto=format&fit=crop', title: 'The Time', categories: ['B&W','Urban'], camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '5.5', film: 'Digitális', orientation: 'landscape' },
+        { id: 7, src: 'https://images.unsplash.com/photo-1755039758257-796a1393e5f1?q=80&w=687&auto=format&fit=crop', title: 'Old Light', categories: ['B&W','Portrait'], camera: 'Fujifilm X-S20', lens: '15-45mm', fstop: '5.5', iso: '400', film: 'Digitális', orientation: 'portrait'},
+        { id: 8, src: 'https://images.unsplash.com/photo-1755039751912-7cf38532bb61?q=80&w=687&auto=format&fit=crop', title: 'Golden Time', categories: ['Urban','Portrait'], camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '300', fstop: '5.5', film: 'Digitális', orientation: 'landscape'},
+        { id: 9, src: 'https://images.unsplash.com/photo-1755301621825-f7466536811a?q=80&w=1175&auto=format&fit=crop', title: 'Chill', categories: ['Nature','Landscape'], camera: 'Olympus IS-200', lens: '24-110mm', iso: '400', fstop: 'N', film: 'ILFORD HP5 PLUS 400', orientation: 'landscape' },
+        { id: 10, src: 'https://images.unsplash.com/photo-1755301626520-85f586776110?w=800&auto=format&fit=crop&q=60', title: 'Opss!', categories: ['Portrait'], camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '300', fstop: 'N', film: 'Digitális', orientation: 'portrait'},
+        { id: 11, src: 'https://images.unsplash.com/photo-1755301626458-aa87308d4ccd?q=80&w=687&auto=format&fit=crop', title: 'Running', categories: ['Urban'], camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '200', fstop: '5.5', film: 'Digitális'},
+        { id: 12, src: 'https://images.unsplash.com/photo-1755552640181-500470469579?q=80&w=685&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Just playing', categories: ['B&W','Portrait'], camera: 'Olympus IS-200', lens: '24-110mm', iso: '400', fstop: 'N', film: 'ILFORD HP5 PLUS 400'},
+        { id: 13, src: 'https://i.postimg.cc/Z5ygkMst/71670010.jpg', title: 'Rescuing the Toy', categories: ['B&W','Portrait'], camera: 'Olympus IS-200', lens: '24-110mm', iso: '400', fstop: 'N', film: 'ILFORD HP5 PLUS 400'},
+        { id: 14, src: 'https://i.postimg.cc/JndTyjXS/DSCF1285.jpg', title: 'Rope', categories: ['Urban'], camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '4.5', film: 'Digitális', orientation: 'landscape'},
+        { id: 15, src: 'https://i.postimg.cc/1tzC5v8p/DSCF1279.jpg', title: 'Ship', categories: ['Urban','Portrait'], camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '4.5', film: 'Digitális', orientation: 'portrait'},
+        { id: 16, src: 'https://i.postimg.cc/PJpS1NzJ/DSCF1255.jpg', title: 'Passing Souls', categories: ['Urban','B&W'], camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '80', fstop: '22', film: 'Digitális', orientation: 'portrait'}
       ];
+      /* ===================================================================== */
 
       const headerBg = document.getElementById('header-bg');
       const progress = document.getElementById('scroll-progress');
@@ -439,7 +510,12 @@
 
       const mobileBtn = document.getElementById('mobile-menu-btn');
       const mobileMenu = document.getElementById('mobile-menu');
-      mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+      function toggleMobileMenu(){
+        const open = mobileMenu.classList.toggle('is-open');
+        mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      mobileBtn.addEventListener('click', toggleMobileMenu);
 
       const galleryGrid = document.getElementById('gallery-grid');
       const filterButtonsContainer = document.getElementById('filter-buttons');
@@ -449,16 +525,25 @@
       let filteredImages = [];
       let currentLightboxIndex = 0;
 
+      function categoryLabel(cat, L){
+        return L.gallery.categories[cat] || cat;
+      }
+      function joinCategoryLabels(cats, L){
+        return cats.map(c => categoryLabel(c, L)).join(' • ');
+      }
+
       function renderGallery() {
         galleryGrid.innerHTML = '';
-        filteredImages = currentFilter === 'All' ? images : images.filter(img => img.category === currentFilter);
+        filteredImages = currentFilter === 'All'
+          ? images
+          : images.filter(img => Array.isArray(img.categories) && img.categories.includes(currentFilter));
 
         filteredImages.forEach((image, index) => {
           const item = document.createElement('figure');
           item.className = 'masonry-item group mb-4 cursor-pointer fade-in-item';
           item.style.transitionDelay = `${index * 50}ms`;
           const L = i18n[currentLang];
-          const catLabel = L.gallery.categories[image.category] || image.category;
+          const catsText = joinCategoryLabels(image.categories || [], L);
 
           item.innerHTML = `
             <img src="${image.src}" alt="${image.title}" loading="lazy" decoding="async"
@@ -470,7 +555,7 @@
                    style="background: var(--glass-background); backdrop-filter: blur(var(--glass-blur)); border-top: var(--glass-border);">
                 <h3 class="font-display text-xl font-bold text-white truncate">${image.title}</h3>
                 <div class="mt-2 text-xs text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
-                  <span>${catLabel}</span>
+                  <span>${catsText}</span>
                 </div>
               </div>
             </figcaption>
@@ -483,21 +568,18 @@
       }
 
       function renderFilterButtons() {
-        const baseCats = [...new Set(images.map(img => img.category))];
-        const categories = ['All', ...baseCats];
+        // kategória készlet több kategóriából
+        const set = new Set();
+        images.forEach(img => (img.categories || []).forEach(c => set.add(c)));
+        const categories = ['All', ...Array.from(set)];
         const L = i18n[currentLang];
+
         filterButtonsContainer.innerHTML = '';
         categories.forEach(category => {
           const button = document.createElement('button');
           const label = category === 'All' ? L.gallery.all : (L.gallery.categories[category] || category);
           button.textContent = label;
-          button.className =
-            `px-5 py-2 text-sm font-semibold rounded-full transition-all duration-300 border ${
-              currentFilter === category
-              ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
-              : 'bg-white/5 border-white/10 hover:border-white/30 text-[var(--color-text)]'
-            }`;
-          button.style.backdropFilter = `blur(var(--glass-blur))`;
+          button.className = `btn btn--chip ${currentFilter === category ? 'is-active' : ''}`;
           button.addEventListener('click', () => { currentFilter = category; renderFilterButtons(); renderGallery(); });
           filterButtonsContainer.appendChild(button);
         });
@@ -540,23 +622,24 @@
         updateLightboxContent();
         lightbox.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-        if (isMobileView()) kofiDustOut(); // <-- ÚJ
+        if (isMobileView()) kofiDustOut();
       }
       function closeLightbox() {
         lightbox.style.display = 'none';
         document.body.style.overflow = 'auto';
-        if (isMobileView()) kofiDustIn();  // <-- ÚJ
+        if (isMobileView()) kofiDustIn();
       }
 
       function updateLightboxContent() {
         const image = filteredImages[currentLightboxIndex];
+        const L = i18n[currentLang];
         document.getElementById('lightbox-img').src = image.src;
         document.getElementById('lightbox-img').alt = image.title;
         document.getElementById('lightbox-title').textContent = image.title;
-        const L = i18n[currentLang];
-        document.getElementById('lightbox-category').textContent = L.gallery.categories[image.category] || image.category;
+        document.getElementById('lightbox-category').textContent = joinCategoryLabels(image.categories || [], L);
         document.getElementById('lightbox-camera').textContent = image.camera || '';
         document.getElementById('lightbox-lens').textContent = image.lens || '';
+        document.getElementById('lightbox-film').textContent = image.film || '';
         document.getElementById('lightbox-iso').textContent = image.iso || '';
         document.getElementById('lightbox-fstop').textContent = image.fstop || '';
       }
@@ -601,12 +684,12 @@
       }
 
       document.getElementById('lang-toggle').addEventListener('click', toggleLang);
-      document.getElementById('lang-toggle-m').addEventListener('click', () => { toggleLang(); mobileMenu.classList.add('hidden'); });
+      document.getElementById('lang-toggle-m').addEventListener('click', () => { toggleLang(); });
 
       initHeroBaseTexts();
       renderFilterButtons();
       renderGallery();
-      onScroll(); // progress + header init
+      onScroll();
 
       applyLang(currentLang);
 
