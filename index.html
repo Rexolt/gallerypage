@@ -25,9 +25,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --font-display: 'Bodoni Moda', serif;
+      /*--font-display: 'DM Sans', sans-serif;*/
       --font-body: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       --color-background: #0a0a0a;
       --color-text: #e6e6e6;
@@ -68,6 +73,35 @@
     }
 
     #scroll-progress{position:fixed;top:0;left:0;height:3px;background:var(--color-accent);width:0%;z-index:60}
+
+    /* ============ MOBILOS KO-FI „ELPORLÁS” ANIMÁCIÓ ============ */
+    #kofi-button-container {
+      transition: opacity .35s ease, transform .35s ease, filter .35s ease;
+      will-change: opacity, transform, filter;
+      position: fixed;
+    }
+    @media (max-width: 767px) {
+      #kofi-button-container.dusting-out {
+        pointer-events: none;
+        opacity: 0;
+        transform: scale(0.92);
+        filter: blur(1px);
+      }
+    }
+    .kofi-dust-particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,.9);
+      opacity: 0;
+      animation: kofi-particle 650ms ease-out forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes kofi-particle {
+      0%   { opacity: 1; transform: translate(0,0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
+    }
+    /* =========================================================== */
   </style>
 </head>
 <body>
@@ -235,14 +269,13 @@
           },
           about: {
             title: "Rólam",
-            paragraph: "17 éves vagyok, négy éve fotózom. Számomra a fényképezés nem egyszerűen képkészítés, hanem önkifejezés: egy módja annak, hogy a világot a saját szemszögemből mutassam meg. Nem a tökéletességet keresem, és nem az a célom, hogy mindenki számára tetszetős képeket készítsek. Sokkal inkább a pillanatok érdekelnek – azok a történések, gesztusok és részletek, amelyek mellett az emberek többsége észrevétlenül elsétál. Hiszek abban, hogy a legapróbb dolgok hordozzák a legtöbb szépséget. A fotózás közben nem kívülálló vagyok, hanem belehelyezkedem a helyzetbe: láthatatlanná válok, részt veszek, figyelek. Így tudom elkapni az őszinte, zavartalan pillanatokat, legyen szó gyerekekről, felnőttekről, városról vagy hétköznapi jelenetekről. A képeim nem akarnak többnek látszani, mint amik: őszinte lenyomatok. A világ apró töredékei, amelyekben benne van a saját történetem és látásmódom",
+            paragraph: "I am 17 years old, and I have been photographing for four years. For me, photography is not simply about taking pictures, but about self-expression: a way of showing the world from my own perspective. I am not searching for perfection, nor is my goal to create images that appeal to everyone. What interests me are the moments – the events, gestures, and details that most people pass by without noticing. I believe that the smallest things carry the greatest beauty. When I photograph, I am not an outsider; I immerse myself in the situation: I become invisible, I participate, I observe. This is how I can capture honest, undisturbed moments – whether of children, adults, the city, or everyday scenes. My pictures do not seek to appear as more than they are: genuine imprints. Tiny fragments of the world that contain my own story and vision.",
             ctaContact: "Kapcsolat",
             ctaFeatured: "Kiemelt képek"
           },
           contact: {
             title: "Kapcsolat",
             intro: "Írj rám itt:",
-            
             instagram: "Instagram",
             facebook: "Facebook"
           },
@@ -275,7 +308,6 @@
           contact: {
             title: "Contact",
             intro: "Find me here:",
-            
             instagram: "Instagram",
             facebook: "Facebook"
           },
@@ -345,7 +377,6 @@
         document.getElementById('contact-intro').textContent = L.contact.intro;
         document.getElementById('contact-ig-text').firstChild.nodeValue = L.contact.instagram + ' ';
         document.getElementById('contact-fb-text').firstChild.nodeValue = L.contact.facebook + ' ';
-        //document.getElementById('contact-email-prefix').textContent = L.contact.emailPrefix;
 
         document.getElementById('label-camera').textContent   = L.lightbox.camera + ':';
         document.getElementById('label-lens').textContent     = L.lightbox.lens + ':';
@@ -380,9 +411,8 @@
         { id: 12, src: 'https://images.unsplash.com/photo-1755552640181-500470469579?q=80&w=685&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', title: 'Just playing', category: 'B&W', camera: 'Olympus IS-200', lens: '24-110mm', iso: '400 ILFORD HP-5 PLUS', fstop: 'N'},
         { id: 13, src: 'https://i.postimg.cc/Z5ygkMst/71670010.jpg', title: 'Rescuing the Toy', category: 'B&W', camera: 'Olympus IS-200', lens: '24-110mm', iso: '400 ILFORD HP-5 PLUS', fstop: 'N'},
         { id: 14, src: 'https://i.postimg.cc/JndTyjXS/DSCF1285.jpg', title: 'Rope', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '4.5', orientation: 'landscape'},
-        { id: 14, src: 'https://i.postimg.cc/1tzC5v8p/DSCF1279.jpg', title: 'Ship', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '4.5', orientation: 'portrait'},
-        { id: 14, src: 'https://i.postimg.cc/PJpS1NzJ/DSCF1255.jpg', title: 'Passing Souls', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '80', fstop: '22', orientation: 'portrait'},
-
+        { id: 15, src: 'https://i.postimg.cc/1tzC5v8p/DSCF1279.jpg', title: 'Ship', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '100', fstop: '4.5', orientation: 'portrait'},
+        { id: 16, src: 'https://i.postimg.cc/PJpS1NzJ/DSCF1255.jpg', title: 'Passing Souls', category: 'Urban', camera: 'Fujifilm X-S20', lens: '15-45mm', iso: '80', fstop: '22', orientation: 'portrait'}
       ];
 
       const headerBg = document.getElementById('header-bg');
@@ -473,13 +503,50 @@
         });
       }
 
+      // ====== KO-FI DUST HELPERS (MOBIL) ======
+      const kofiEl = document.getElementById('kofi-button-container');
+      function isMobileView() { return window.matchMedia('(max-width: 767px)').matches; }
+      function kofiDustOut() {
+        if (!kofiEl || !isMobileView() || kofiEl.dataset.hidden === '1') return;
+        kofiEl.classList.add('dusting-out');
+        kofiEl.dataset.hidden = '1';
+
+        const rect = kofiEl.getBoundingClientRect();
+        const particles = 28;
+        for (let i = 0; i < particles; i++) {
+          const p = document.createElement('span');
+          p.className = 'kofi-dust-particle';
+          const angle = (Math.random() * Math.PI) - (Math.PI / 2);
+          const dist  = 24 + Math.random() * 72;
+          p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+          p.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+          p.style.left = (rect.width  * (0.25 + Math.random() * 0.5)) + 'px';
+          p.style.top  = (rect.height * (0.25 + Math.random() * 0.5)) + 'px';
+          p.style.animationDelay = (Math.random() * 140) + 'ms';
+          kofiEl.appendChild(p);
+          p.addEventListener('animationend', () => p.remove());
+        }
+      }
+      function kofiDustIn() {
+        if (!kofiEl) return;
+        [...kofiEl.querySelectorAll('.kofi-dust-particle')].forEach(n => n.remove());
+        kofiEl.classList.remove('dusting-out');
+        kofiEl.dataset.hidden = '0';
+      }
+      // ========================================
+
       function openLightbox(index) {
         currentLightboxIndex = index;
         updateLightboxContent();
         lightbox.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        if (isMobileView()) kofiDustOut(); // <-- ÚJ
       }
-      function closeLightbox() { lightbox.style.display = 'none'; document.body.style.overflow = 'auto'; }
+      function closeLightbox() {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        if (isMobileView()) kofiDustIn();  // <-- ÚJ
+      }
 
       function updateLightboxContent() {
         const image = filteredImages[currentLightboxIndex];
